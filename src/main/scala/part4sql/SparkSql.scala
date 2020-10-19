@@ -26,6 +26,7 @@ object SparkSql extends App {
       |select Name from cars where Origin = 'USA'
     """.stripMargin)
 
+
   // we can run ANY SQL statement
   spark.sql("create database rtjvm")
   spark.sql("use rtjvm")

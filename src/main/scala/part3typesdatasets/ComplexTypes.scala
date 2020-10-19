@@ -11,9 +11,11 @@ object ComplexTypes extends App {
     .config("spark.master", "local")
     .getOrCreate()
 
+  spark.sql("set spark.sql.legacy.timeParserPolicy=LEGACY")
+
   val moviesDF = spark.read
     .option("inferSchema", "true")
-    .json("src/main/resources/data/movies.json")
+    .json("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/movies.json")
 
   // Dates
 
@@ -23,9 +25,9 @@ object ComplexTypes extends App {
   moviesWithReleaseDates
     .withColumn("Today", current_date()) // today
     .withColumn("Right_Now", current_timestamp()) // this second
-    .withColumn("Movie_Age", datediff(col("Today"), col("Actual_Release")) / 365) // date_add, date_sub
+    .withColumn("Movie_Age", datediff(col("Today"), col("Actual_Release")) / 365).show // date_add, date_sub
 
-  moviesWithReleaseDates.select("*").where(col("Actual_Release").isNull)
+  moviesWithReleaseDates.select("*").where(col("Actual_Release").isNull).show
 
   /**
     * Exercise
@@ -39,7 +41,7 @@ object ComplexTypes extends App {
   val stocksDF = spark.read.format("csv")
     .option("inferSchema", "true")
     .option("header", "true")
-    .load("src/main/resources/data/stocks.csv")
+    .load("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/stocks.csv")
 
   val stocksDFWithDates = stocksDF
     .withColumn("actual_date", to_date(col("date"), "MMM dd yyyy"))
@@ -48,8 +50,8 @@ object ComplexTypes extends App {
 
   // 1 - with col operators
   moviesDF
-    .select(col("Title"), struct(col("US_Gross"), col("Worldwide_Gross")).as("Profit"))
-    .select(col("Title"), col("Profit").getField("US_Gross").as("US_Profit"))
+    .select(col("Title"), struct(col("US_Gross"), col("Worldwide_Gross")).as("Profit")).show
+//    .select(col("Title"), col("Profit").getField("US_Gross").as("US_Profit")).show
 
   // 2 - with expression strings
   moviesDF
@@ -65,6 +67,6 @@ object ComplexTypes extends App {
     expr("Title_Words[0]"), // indexing
     size(col("Title_Words")), // array size
     array_contains(col("Title_Words"), "Love") // look for value in array
-  )
+  ).show
 
 }

@@ -29,10 +29,10 @@ object RDDs extends App {
       .map(tokens => StockValue(tokens(0), tokens(1), tokens(2).toDouble))
       .toList
 
-  val stocksRDD = sc.parallelize(readStocks("src/main/resources/data/stocks.csv"))
+  val stocksRDD = sc.parallelize(readStocks("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/stocks.csv"))
 
   // 2b - reading from files
-  val stocksRDD2 = sc.textFile("src/main/resources/data/stocks.csv")
+  val stocksRDD2 = sc.textFile("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/stocks.csv")
     .map(line => line.split(","))
     .filter(tokens => tokens(0).toUpperCase() == tokens(0))
     .map(tokens => StockValue(tokens(0), tokens(1), tokens(2).toDouble))
@@ -41,7 +41,7 @@ object RDDs extends App {
   val stocksDF = spark.read
     .option("header", "true")
     .option("inferSchema", "true")
-    .csv("src/main/resources/data/stocks.csv")
+    .csv("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/stocks.csv")
 
   import spark.implicits._
   val stocksDS = stocksDF.as[StockValue]
@@ -79,7 +79,7 @@ object RDDs extends App {
   val repartitionedStocksRDD = stocksRDD.repartition(30)
   repartitionedStocksRDD.toDF.write
     .mode(SaveMode.Overwrite)
-    .parquet("src/main/resources/data/stocks30")
+    .parquet("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/stocks30")
   /*
     Repartitioning is EXPENSIVE. Involves Shuffling.
     Best practice: partition EARLY, then process that.
@@ -90,7 +90,7 @@ object RDDs extends App {
   val coalescedRDD = repartitionedStocksRDD.coalesce(15) // does NOT involve shuffling
   coalescedRDD.toDF.write
     .mode(SaveMode.Overwrite)
-    .parquet("src/main/resources/data/stocks15")
+    .parquet("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/stocks15")
 
   /**
     * Exercises
@@ -106,7 +106,7 @@ object RDDs extends App {
   // 1
   val moviesDF = spark.read
     .option("inferSchema", "true")
-    .json("src/main/resources/data/movies.json")
+    .json("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/movies.json")
 
   val moviesRDD = moviesDF
     .select(col("Title").as("title"), col("Major_Genre").as("genre"), col("IMDB_Rating").as("rating"))

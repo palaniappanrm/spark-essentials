@@ -11,15 +11,15 @@ object TaxiApplication extends App {
     .getOrCreate()
   import spark.implicits._
 
-  val bigTaxiDF = spark.read.load("path/to/your/dataset/NYC_taxi_2009-2016.parquet")
+//  val bigTaxiDF = spark.read.load("path/to/your/dataset/NYC_taxi_2009-2016.parquet")
 
-  val taxiDF = spark.read.load("src/main/resources/data/yellow_taxi_jan_25_2018")
+  val taxiDF = spark.read.load("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/yellow_taxi_jan_25_2018")
   taxiDF.printSchema()
 
   val taxiZonesDF = spark.read
     .option("header", "true")
     .option("inferSchema", "true")
-    .csv("src/main/resources/data/taxi_zones.csv")
+    .csv("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/taxi_zones.csv")
   taxiZonesDF.printSchema()
 
   /**

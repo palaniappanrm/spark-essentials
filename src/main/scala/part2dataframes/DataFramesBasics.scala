@@ -15,7 +15,7 @@ object DataFramesBasics extends App {
   val firstDF = spark.read
     .format("json")
     .option("inferSchema", "true")
-    .load("src/main/resources/data/cars.json")
+    .load("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/cars.json")
 
   // showing a DF
   firstDF.show()
@@ -47,7 +47,7 @@ object DataFramesBasics extends App {
   val carsDFWithSchema = spark.read
     .format("json")
     .schema(carsDFSchema)
-    .load("src/main/resources/data/cars.json")
+    .load("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/cars.json")
 
   // create rows by hand
   val myRow = Row("chevrolet chevelle malibu",18,8,307,130,3504,12.0,"1970-01-01","USA")
@@ -101,7 +101,7 @@ object DataFramesBasics extends App {
   val moviesDF = spark.read
     .format("json")
     .option("inferSchema", "true")
-    .load("src/main/resources/data/movies.json")
+    .load("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/movies.json")
   moviesDF.printSchema()
   println(s"The Movies DF has ${moviesDF.count()} rows")
 }

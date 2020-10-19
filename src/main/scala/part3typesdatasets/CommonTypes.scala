@@ -2,7 +2,6 @@ package part3typesdatasets
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.FloatType
 
 object CommonTypes extends App {
 
@@ -13,10 +12,10 @@ object CommonTypes extends App {
 
   val moviesDF = spark.read
     .option("inferSchema", "true")
-    .json("src/main/resources/data/movies.json")
+    .json("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/movies.json")
 
   // adding a plain value to a DF
-  moviesDF.select(col("Title"), lit(47).as("plain_value"))
+  moviesDF.select(col("Title"), lit(47).as("plain_value")).show()
 
   // Booleans
   val dramaFilter = col("Major_Genre") equalTo "Drama"
@@ -44,10 +43,10 @@ object CommonTypes extends App {
 
   val carsDF = spark.read
     .option("inferSchema", "true")
-    .json("src/main/resources/data/cars.json")
+    .json("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/cars.json")
 
   // capitalization: initcap, lower, upper
-  carsDF.select(initcap(col("Name")))
+  carsDF.select(initcap(col("Name"))).show()
 
   // contains
   carsDF.select("*").where(col("Name").contains("volkswagen"))
@@ -59,10 +58,15 @@ object CommonTypes extends App {
     regexp_extract(col("Name"), regexString, 0).as("regex_extract")
   ).where(col("regex_extract") =!= "").drop("regex_extract")
 
+  carsDF.select(
+    col("Name"),
+    regexp_extract(col("Name"), regexString, 0).as("regex_extract")
+  ).where(col("regex_extract") =!= "").drop("regex_extract").show()
+
   vwDF.select(
     col("Name"),
     regexp_replace(col("Name"), regexString, "People's Car").as("regex_replace")
-  )
+  ).show()
 
   /**
     * Exercise
@@ -81,7 +85,7 @@ object CommonTypes extends App {
     col("Name"),
     regexp_extract(col("Name"), complexRegex, 0).as("regex_extract")
   ).where(col("regex_extract") =!= "")
-    .drop("regex_extract")
+    .drop("regex_extract").show()
 
   // version 2 - contains
   val carNameFilters = getCarNames.map(_.toLowerCase()).map(name => col("Name").contains(name))

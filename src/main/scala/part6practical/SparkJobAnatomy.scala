@@ -29,14 +29,14 @@ object SparkJobAnatomy extends App {
   // in another terminal: docker-exec -it spark-cluster_spark-master_1 bash
 
   val rdd1 = sc.parallelize(1 to 1000000)
-  rdd1.count
+  println(rdd1.count)
   // inspect the UI, one stage with 6 tasks; DAG in a single step
   // task = a unit of computation applied to a unit of data (a partition)
 
-  rdd1.map(_ * 2).count
+  println(rdd1.map(_ * 2).count)
   // inspect the UI, another job with one stage, 6 tasks but one more step in the DAG - that's for the map
 
-  rdd1.repartition(23).count
+  println(rdd1.repartition(23).count)
   // UI: 2 stages, one with 6 tasks, one with 23 tasks. Each stage is delimited by shuffles
 
   rdd1.toDF.show

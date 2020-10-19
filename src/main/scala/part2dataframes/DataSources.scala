@@ -33,7 +33,7 @@ object DataSources extends App {
     .format("json")
     .schema(carsSchema) // enforce a schema
     .option("mode", "failFast") // dropMalformed, permissive (default)
-    .option("path", "src/main/resources/data/cars.json")
+    .option("path", "/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/cars.json")
     .load()
 
   // alternative reading with options map
@@ -41,7 +41,7 @@ object DataSources extends App {
     .format("json")
     .options(Map(
       "mode" -> "failFast",
-      "path" -> "src/main/resources/data/cars.json",
+      "path" -> "/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/cars.json",
       "inferSchema" -> "true"
     ))
     .load()
@@ -56,7 +56,7 @@ object DataSources extends App {
   carsDF.write
     .format("json")
     .mode(SaveMode.Overwrite)
-    .save("src/main/resources/data/cars_dupe.json")
+    .save("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/cars_dupe.json")
 
   // JSON flags
   spark.read
@@ -64,7 +64,7 @@ object DataSources extends App {
     .option("dateFormat", "YYYY-MM-dd") // couple with schema; if Spark fails parsing, it will put null
     .option("allowSingleQuotes", "true")
     .option("compression", "uncompressed") // bzip2, gzip, lz4, snappy, deflate
-    .json("src/main/resources/data/cars.json")
+    .json("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/cars.json")
 
   // CSV flags
   val stocksSchema = StructType(Array(
@@ -79,21 +79,21 @@ object DataSources extends App {
     .option("header", "true")
     .option("sep", ",")
     .option("nullValue", "")
-    .csv("src/main/resources/data/stocks.csv")
+    .csv("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/stocks.csv")
 
   // Parquet
   carsDF.write
     .mode(SaveMode.Overwrite)
-    .save("src/main/resources/data/cars.parquet")
+    .save("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/cars.parquet")
 
   // Text files
-  spark.read.text("src/main/resources/data/sampleTextFile.txt").show()
+  spark.read.text("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/sampleTextFile.txt").show()
 
   // Reading from a remote DB
-  val driver = "org.postgresql.Driver"
-  val url = "jdbc:postgresql://localhost:5432/rtjvm"
-  val user = "docker"
-  val password = "docker"
+  val driver = "com.mysql.cj.jdbc.Driver"
+  val url = "jdbc:mysql://localhost:3306/test?useSSL=false"
+  val user = "root"
+  val password = "password"
 
   val employeesDF = spark.read
     .format("jdbc")
@@ -101,7 +101,7 @@ object DataSources extends App {
     .option("url", url)
     .option("user", user)
     .option("password", password)
-    .option("dbtable", "public.employees")
+    .option("dbtable", "USER")
     .load()
 
   /**
@@ -111,17 +111,17 @@ object DataSources extends App {
     * - table "public.movies" in the Postgres DB
     */
 
-  val moviesDF = spark.read.json("src/main/resources/data/movies.json")
+  val moviesDF = spark.read.json("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/movies.json")
 
-  // TSV
+  // CSV
   moviesDF.write
     .format("csv")
     .option("header", "true")
     .option("sep", "\t")
-    .save("src/main/resources/data/movies.csv")
+    .save("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/movies.csv")
 
   // Parquet
-  moviesDF.write.save("src/main/resources/data/movies.parquet")
+  moviesDF.write.save("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/movies.parquet")
 
   // save to DF
   moviesDF.write
@@ -130,6 +130,6 @@ object DataSources extends App {
     .option("url", url)
     .option("user", user)
     .option("password", password)
-    .option("dbtable", "public.movies")
+    .option("dbtable", "movies")
     .save()
 }

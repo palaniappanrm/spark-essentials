@@ -12,7 +12,7 @@ object Aggregations extends App {
 
   val moviesDF = spark.read
     .option("inferSchema", "true")
-    .json("src/main/resources/data/movies.json")
+    .json("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/movies.json")
 
 
   // counting

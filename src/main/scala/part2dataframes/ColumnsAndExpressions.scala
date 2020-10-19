@@ -12,7 +12,7 @@ object ColumnsAndExpressions extends App {
 
   val carsDF = spark.read
     .option("inferSchema", "true")
-    .json("src/main/resources/data/cars.json")
+    .json("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/cars.json")
 
   // Columns
   val firstColumn = carsDF.col("Name")
@@ -74,7 +74,7 @@ object ColumnsAndExpressions extends App {
   val americanPowerfulCarsDF3 = carsDF.filter("Origin = 'USA' and Horsepower > 150")
 
   // unioning = adding more rows
-  val moreCarsDF = spark.read.option("inferSchema", "true").json("src/main/resources/data/more_cars.json")
+  val moreCarsDF = spark.read.option("inferSchema", "true").json("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/more_cars.json")
   val allCarsDF = carsDF.union(moreCarsDF) // works if the DFs have the same schema
 
   // distinct values
@@ -90,7 +90,7 @@ object ColumnsAndExpressions extends App {
     * Use as many versions as possible
     */
 
-  val moviesDF = spark.read.option("inferSchema", "true").json("src/main/resources/data/movies.json")
+  val moviesDF = spark.read.option("inferSchema", "true").json("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/movies.json")
   moviesDF.show()
 
   // 1

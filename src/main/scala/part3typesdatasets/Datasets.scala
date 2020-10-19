@@ -1,9 +1,7 @@
 package part3typesdatasets
 
-import java.sql.Date
-
-import org.apache.spark.sql.{DataFrame, Dataset, Encoders, SparkSession}
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.{DataFrame, Dataset, Encoders, SparkSession}
 
 
 object Datasets extends App {
@@ -17,7 +15,7 @@ object Datasets extends App {
     .format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
-    .load("src/main/resources/data/numbers.csv")
+    .load("/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/numbers.csv")
 
   numbersDF.printSchema()
 
@@ -35,14 +33,14 @@ object Datasets extends App {
                 Horsepower: Option[Long],
                 Weight_in_lbs: Long,
                 Acceleration: Double,
-                Year: Date,
+                Year: String,
                 Origin: String
                 )
 
   // 2 - read the DF from the file
   def readDF(filename: String) = spark.read
     .option("inferSchema", "true")
-    .json(s"src/main/resources/data/$filename")
+    .json(s"/Users/palaniappan/personal_projects/spark-essentials/src/main/resources/data/$filename")
 
   val carsDF = readDF("cars.json")
 
@@ -52,7 +50,7 @@ object Datasets extends App {
   val carsDS = carsDF.as[Car]
 
   // DS collection functions
-  numbersDS.filter(_ < 100)
+  numbersDS.filter(_ < 100).show
 
   // map, flatMap, fold, reduce, for comprehensions ...
   val carNamesDS = carsDS.map(car => car.Name.toUpperCase())
